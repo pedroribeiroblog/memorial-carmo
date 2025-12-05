@@ -1,151 +1,511 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leitor: Minha História, Minha Vida</title>
+    <title>Memorial do Carmo: A Obra Completa</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #f0f9ff; height: 100vh; margin: 0; display: flex; flex-direction: column; }
+        :root {
+            --paper-bg: #f9f7f1;
+            --text-main: #2a2a2a;
+            --gold-accent: #c5a059;
+            --red-drop: #8b2e2e;
+        }
+
+        body {
+            background-color: var(--paper-bg);
+            color: var(--text-main);
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+        }
+
+        /* Títulos */
+        h1, h2, h3, .font-title {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* Capitulares (Letra grande no início) */
+        .drop-cap::first-letter {
+            font-family: 'Cinzel', serif;
+            font-size: 3.8em;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.15em;
+            color: var(--red-drop);
+            font-weight: 700;
+        }
+
+        /* Menu Lateral */
+        .sidebar {
+            background-color: #f0ebe0;
+            border-right: 1px solid #d4cbb8;
+        }
         
-        /* Layout para Desktop: Lado a Lado */
-        @media (min-width: 1024px) {
-            body { flex-direction: row; }
-            #sidebar { width: 350px; height: 100vh; overflow-y: auto; }
-            #pdf-container { flex-grow: 1; height: 100vh; }
-        }
-
-        /* Layout para Mobile: Menu em cima, PDF embaixo */
-        @media (max-width: 1023px) {
-            #sidebar { width: 100%; height: 30vh; overflow-y: auto; }
-            #pdf-container { width: 100%; height: 70vh; }
-        }
-
-        .nav-btn {
+        .nav-item {
             display: block;
-            width: 100%;
-            text-align: left;
-            padding: 10px 15px;
-            border-bottom: 1px solid #bae6fd;
-            color: #0c4a6e;
-            transition: background 0.2s;
-            background: white;
-            font-size: 0.9rem;
+            padding: 0.5rem 0;
+            color: #5c5c5c;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            padding-left: 1rem;
         }
-        .nav-btn:hover { background-color: #e0f2fe; color: #0284c7; font-weight: bold; }
-        .active-chapter { background-color: #0284c7; color: white !important; }
-        
-        iframe { width: 100%; height: 100%; border: none; }
+
+        .nav-item:hover {
+            color: var(--red-drop);
+            border-left-color: var(--gold-accent);
+            background-color: #e6e0d0;
+        }
+
+        /* Cartão de Capítulo */
+        .chapter-card {
+            background: white;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--gold-accent);
+            position: relative;
+        }
+
+        .chapter-number {
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--red-drop);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Citações */
+        blockquote {
+            border-left: 4px solid var(--gold-accent);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: #555;
+            background-color: #fdfdfd;
+            padding: 1.5rem;
+        }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <!-- ÍNDICE LATERAL -->
-    <div id="sidebar" class="bg-white border-r border-sky-200 shadow-lg z-10">
-        <div class="p-4 bg-sky-100 border-b border-sky-300 sticky top-0">
-            <h1 class="text-lg font-bold text-sky-900">Índice do Livro</h1>
-            <p class="text-xs text-sky-700">Clique para ler o capítulo</p>
-        </div>
+    <div class="flex flex-col lg:flex-row min-h-screen">
         
-        <!-- Lista de Capítulos (Ajuste o número da página no 'data-page') -->
-        <!-- Exemplo: data-page="10" vai para a página 10 do PDF -->
-        <nav id="chapter-list">
-            <button class="nav-btn" onclick="goToPage(1, this)">Capa</button>
-            <button class="nav-btn" onclick="goToPage(6, this)">Prefácio: A Vida como Testemunho</button>
-            <button class="nav-btn" onclick="goToPage(9, this)">Introdução: No Silêncio, Deus Fala</button>
-            <button class="nav-btn" onclick="goToPage(10, this)">1965: Meus Pais</button>
-            <button class="nav-btn" onclick="goToPage(14, this)">1966: Raízes e Nascimento</button>
-            <button class="nav-btn" onclick="goToPage(21, this)">1974: A Luz da Lamparina</button>
-            <button class="nav-btn" onclick="goToPage(26, this)">1977: O Menino que Voltou</button>
-            <button class="nav-btn" onclick="goToPage(31, this)">1980: Primeiros Passos</button>
-            <button class="nav-btn" onclick="goToPage(36, this)">1982: O Despertar</button>
-            <button class="nav-btn" onclick="goToPage(43, this)">1982: Cecy, Raízes e Asas</button>
-            <button class="nav-btn" onclick="goToPage(49, this)">1986: A Fábrica de Calçados</button>
-            <button class="nav-btn" onclick="goToPage(54, this)">1986: Rita Carretel e a Ida para SP</button>
-            <button class="nav-btn" onclick="goToPage(58, this)">1986: Vida Corrida e Banco Itaú</button>
-            <button class="nav-btn" onclick="goToPage(61, this)">1987: Márcia e Silvia</button>
-            <button class="nav-btn" onclick="goToPage(66, this)">1987: Inácio</button>
-            <button class="nav-btn" onclick="goToPage(70, this)">1987: O Anjo da Guarda</button>
-            <button class="nav-btn" onclick="goToPage(79, this)">1987: Caminhada pelo Brasil</button>
-            <button class="nav-btn" onclick="goToPage(87, this)">1987: O Medo na Estrada</button>
-            <button class="nav-btn" onclick="goToPage(96, this)">1987: A Fome em Fortaleza</button>
-            <button class="nav-btn" onclick="goToPage(99, this)">1988: A Solidão</button>
-            <button class="nav-btn" onclick="goToPage(106, this)">1988: Chegada em Jacareí</button>
-            <button class="nav-btn" onclick="goToPage(115, this)">1988: Albergue e Pousada</button>
-            <button class="nav-btn" onclick="goToPage(124, this)">1988: Escritório de Sidney</button>
-            <button class="nav-btn" onclick="goToPage(130, this)">1988: Luís Henrique</button>
-            <button class="nav-btn" onclick="goToPage(137, this)">1988: Marcos</button>
-            <button class="nav-btn" onclick="goToPage(144, this)">1990: SAAE e Convento</button>
-            <button class="nav-btn" onclick="goToPage(152, this)">1990: A Criança em Silêncio</button>
-            <button class="nav-btn" onclick="goToPage(158, this)">1994: Retorno ao SAAE</button>
-            <button class="nav-btn" onclick="goToPage(162, this)">1995: Joel e os Gatos</button>
-            <button class="nav-btn" onclick="goToPage(167, this)">1999: A Queda e a Justiça</button>
-            <button class="nav-btn" onclick="goToPage(175, this)">2000: Bebedeira e Amor</button>
-            <button class="nav-btn" onclick="goToPage(183, this)">2001: Silvana</button>
-            <button class="nav-btn" onclick="goToPage(187, this)">2009: Fátima</button>
-            <button class="nav-btn" onclick="goToPage(191, this)">2009: Cláudia</button>
-            <button class="nav-btn" onclick="goToPage(197, this)">2009: Susana</button>
-            <button class="nav-btn" onclick="goToPage(202, this)">2010: Neusa</button>
-            <button class="nav-btn" onclick="goToPage(208, this)">2013: Eduardo</button>
-            <button class="nav-btn" onclick="goToPage(213, this)">2013: Leandro</button>
-            <button class="nav-btn" onclick="goToPage(218, this)">2015: Noites de Estudo</button>
-            <button class="nav-btn" onclick="goToPage(222, this)">2016: Reflexões aos 50</button>
-            <button class="nav-btn" onclick="goToPage(226, this)">2018: A Aposentadoria</button>
-            <button class="nav-btn" onclick="goToPage(231, this)">2019: Rua Hollywood</button>
-            <button class="nav-btn" onclick="goToPage(235, this)">2020: Jeovani</button>
-            <button class="nav-btn" onclick="goToPage(242, this)">2022: Amilton</button>
-            <button class="nav-btn" onclick="goToPage(246, this)">2023: Frei Sidney</button>
-            <button class="nav-btn" onclick="goToPage(250, this)">2023: Conversão e Carmo</button>
-            <button class="nav-btn" onclick="goToPage(253, this)">2024: Café com Silvana</button>
-            <button class="nav-btn" onclick="goToPage(255, this)">2024: Ilma</button>
-            <button class="nav-btn" onclick="goToPage(260, this)">2024: Casa de Esperança</button>
-            <button class="nav-btn" onclick="goToPage(265, this)">2024: Gratidão</button>
-            <button class="nav-btn" onclick="goToPage(270, this)">2024: Um Dia de Ordem</button>
-            <button class="nav-btn" onclick="goToPage(276, this)">2025: O Tratamento</button>
-            <button class="nav-btn" onclick="goToPage(280, this)">2025: Muito Obrigado</button>
-            <button class="nav-btn" onclick="goToPage(292, this)">Trajetória e Currículo</button>
-        </nav>
-    </div>
-
-    <!-- ÁREA DE LEITURA DO PDF -->
-    <div id="pdf-container" class="bg-gray-200 relative">
-        <!-- Substitua 'livro.pdf' pelo nome EXATO do seu arquivo no GitHub -->
-        <iframe id="pdf-frame" src="livro.pdf#page=1&view=FitH" title="Leitor de PDF"></iframe>
-        
-        <!-- Aviso caso o PDF não carregue -->
-        <div id="no-pdf" class="hidden absolute inset-0 flex items-center justify-center bg-white p-8 text-center">
-            <div>
-                <h3 class="text-xl font-bold text-red-600 mb-2">PDF Não Encontrado</h3>
-                <p>Certifique-se de que o arquivo do livro está no repositório com o nome correto.</p>
-                <p class="text-sm text-gray-500 mt-4">Nome esperado: <strong>livro.pdf</strong></p>
+        <!-- SIDEBAR DE NAVEGAÇÃO -->
+        <aside class="sidebar w-full lg:w-1/5 lg:h-screen lg:sticky lg:top-0 overflow-y-auto p-6 hidden lg:block">
+            <div class="mb-8 text-center">
+                <h1 class="font-title text-xl font-bold text-[#2c1810]">DECOR CARMELI</h1>
+                <p class="text-xs mt-1 text-gray-500 italic">Índice da Obra</p>
+                <div class="w-10 h-0.5 bg-[#8b2e2e] mx-auto mt-3"></div>
             </div>
-        </div>
+            
+            <nav class="space-y-1">
+                <a href="#cap1" class="nav-item">I. Histórico da Ordem</a>
+                <a href="#cap2" class="nav-item">II. O Escapulário</a>
+                <a href="#cap3" class="nav-item">III. Ordens Terceiras</a>
+                <a href="#cap4" class="nav-item">IV. A Ordem em SP (1594)</a>
+                <a href="#cap5" class="nav-item">V. A Igreja do Carmo</a>
+                <a href="#cap6" class="nav-item">VI. Reformas da Igreja</a>
+                <a href="#cap7" class="nav-item">VII. Comissários</a>
+                <a href="#cap8" class="nav-item">VIII. Côn. Christofaro</a>
+                <a href="#cap9" class="nav-item">IX. Mons. Passalacqua</a>
+                <a href="#cap10" class="nav-item">X. Mons. Manfredo Leite</a>
+                <a href="#cap11" class="nav-item">XI. Translado dos Restos</a>
+                <a href="#cap12" class="nav-item">XII. Cemitério da Ordem</a>
+                <a href="#cap13" class="nav-item">XIII. Cripta e Pe. Feijó</a>
+                <a href="#cap14" class="nav-item">XIV. Colégio do Carmo</a>
+                <a href="#cap15" class="nav-item">XV. O Estatuto</a>
+                <a href="#cap16" class="nav-item">XVI. Assistência Social</a>
+                <a href="#cap17" class="nav-item">XVII. Efemérides</a>
+                <a href="#cap18" class="nav-item">XVIII. A Catedral</a>
+                <a href="#cap19" class="nav-item">XIX. Ruas Antigas</a>
+                <a href="#cap20" class="nav-item">XX. Paulo Suplicy</a>
+                <a href="#cap21" class="nav-item">XXI. José M. Whitaker</a>
+                <a href="#cap22" class="nav-item">XXII. Papas e Reis</a>
+                <a href="#cap23" class="nav-item">XXIII. Priores</a>
+                <a href="#cap24" class="nav-item">XXIV. Mesas Adm.</a>
+                <a href="#cap25" class="nav-item">XXV. Arquivo</a>
+            </nav>
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="w-full lg:w-4/5 p-6 lg:p-16 max-w-5xl mx-auto">
+            
+            <!-- Cabeçalho Mobile -->
+            <div class="lg:hidden mb-8 text-center border-b pb-4">
+                <h1 class="font-title text-2xl font-bold">MEMORIAL DO CARMO</h1>
+                <p class="text-sm text-gray-500">Navegue pelos capítulos abaixo</p>
+            </div>
+
+            <!-- Introdução -->
+            <div class="mb-16 text-center">
+                <p class="text-sm font-bold tracking-[0.3em] text-[#8b2e2e] uppercase mb-2">Baseado na Obra Original de 1978</p>
+                <h1 class="font-title text-5xl lg:text-6xl font-bold text-[#2c1810] mb-6 leading-tight">Carmo: Patrimônio da História, Arte e Fé</h1>
+                <p class="italic text-gray-600 max-w-2xl mx-auto text-lg">
+                    "Este livro é o fruto de quatro anos de exaustivo trabalho baseado em pesquisas feitas em fontes seguras... para servir à Ordem Carmelitana." — Raul Leme Monteiro
+                </p>
+            </div>
+
+            <!-- CAPÍTULO I -->
+            <section id="cap1" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO I</div>
+                <h2 class="text-3xl font-title text-center mb-8">Breve Histórico da Ordem Carmelitana</h2>
+                
+                <p class="drop-cap mb-6">
+                    A Ordem do Carmo remonta a quase mil anos antes de Cristo, quando, na montanha do Carmelo, na Palestina, os eremitas em torno do Santo Profeta Elias (980-918 A.C.) prestavam culto profético à futura Mãe do Redentor. Daquelas longínquas regiões vieram os arautos de sua fé para o ocidente.
+                </p>
+                <p class="mb-6">
+                    O primeiro Prior Geral foi São Bertoldo de Calábria. Em 1209, Santo Alberto, Patriarca de Jerusalém, deu-lhes uma Regra escrita.
+                </p>
+                <h3 class="font-title text-xl mt-8 mb-4 border-b border-gray-300 pb-2">Os Carmelitas no Brasil</h3>
+                <p class="mb-4">
+                    No Brasil, os Carmelitas chegaram nos primórdios da colonização, trazidos pela nau de Frutuoso Viana, em janeiro de 1580. Instalaram-se primeiramente em Santos, recebidos por Brás Cubas.
+                </p>
+                <p>
+                    Em <strong>1590</strong>, galgaram o Planalto de Piratininga. Em 1592, Frei Antônio de São Paulo pediu autorização à Câmara para "sitiar uma casa". Em <strong>1594</strong>, inaugurou o Convento e a Igreja do Carmo na esplanada que dominava a várzea do Tamanduateí (hoje início da Av. Rangel Pestana).
+                </p>
+            </section>
+
+            <!-- CAPÍTULO II -->
+            <section id="cap2" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO II</div>
+                <h2 class="text-3xl font-title text-center mb-8">O Escapulário do Carmo</h2>
+                
+                <p class="drop-cap mb-4">
+                    O Escapulário, ou "Bentinho", é uma dádiva de Nossa Senhora. Em 16 de julho de 1251, na Inglaterra, São Simão Stock suplicava proteção à Ordem quando a Virgem apareceu e lhe entregou o Escapulário dizendo: "Recebe, filho diletíssimo, o Escapulário da tua Ordem... sinal de salvação, aliança de paz e pacto sempiterno".
+                </p>
+                <p>
+                    O Papa Pio XII, em 1950, proclamou o Escapulário como símbolo da consagração ao Imaculado Coração de Maria.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO III -->
+            <section id="cap3" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO III</div>
+                <h2 class="text-3xl font-title text-center mb-8">O Que São as Ordens Terceiras?</h2>
+                
+                <p class="mb-4">
+                    A Ordem Primeira é a dos frades (padres). A Ordem Segunda é a das freiras de clausura. 
+                </p>
+                <p class="mb-4">
+                    <strong>Ordens Terceiras</strong>, instituídas pela Bula de Xisto IV em 1476, são formadas por <strong>leigos</strong> de ambos os sexos. Irmão Terceiro é o católico que, vivendo no mundo, com sua família e profissão, procura a perfeição cristã seguindo o espírito do Carmelo e dedicando-se a obras de caridade.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO IV -->
+            <section id="cap4" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO IV</div>
+                <h2 class="text-3xl font-title text-center mb-8">A Venerável Ordem Terceira de São Paulo</h2>
+                
+                <p class="drop-cap mb-4">
+                    A instalação da nossa Ordem Terceira em São Paulo ocorreu no ano de <strong>1594</strong>, sob a égide dos Padres Carmelitas. É uma das mais antigas do Brasil. O documento mais antigo do arquivo é um livro de atas de 1674, que já mostrava uma administração completa.
+                </p>
+                <h3 class="font-title text-xl mt-8 mb-4 border-b border-gray-300 pb-2">Fatos Históricos Marcantes</h3>
+                <ul class="list-disc pl-6 space-y-4 mb-6">
+                    <li>
+                        <strong>Visita Imperial (1846):</strong> Em 12 de abril, o Imperador D. Pedro II e a Imperatriz D. Teresa Cristina foram recebidos com pomposas festas. As poltronas usadas por eles são guardadas até hoje como relíquias.
+                    </li>
+                    <li>
+                        <strong>As Procissões:</strong> Antigamente, as procissões do "Triunfo" e do "Enterro" que saíam do Carmo paravam a cidade. Eram o evento máximo da capital, onde a elite e o povo se uniam na fé.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- CAPÍTULO V -->
+            <section id="cap5" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO V</div>
+                <h2 class="text-3xl font-title text-center mb-8">A Igreja do Carmo</h2>
+                
+                <p class="drop-cap mb-4">
+                    A construção da Igreja da Ordem Terceira (vizinha à dos frades) começou por volta de <strong>1632</strong>. É um documento autêntico do barroco paulista.
+                </p>
+                <p class="mb-4">
+                    O <strong>Altar-Mor</strong> é soberbo, em estilo barroco com entalhes dourados. Mas as maiores joias são as pinturas:
+                </p>
+                <blockquote class="text-sm">
+                    "O forro da capela-mor ostenta pintura de <strong>Pedro Alexandrino</strong> (1760). O forro da nave guarda a obra-prima do <strong>Padre Jesuíno do Monte Carmelo</strong> (1798), representando Evangelistas e Doutores da Igreja."
+                </blockquote>
+                <p>
+                    Possui ainda sete altares laterais dedicados à Paixão de Cristo, cujas imagens eram levadas nas procissões antigas.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO VI -->
+            <section id="cap6" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO VI</div>
+                <h2 class="text-3xl font-title text-center mb-8">Reformas da Igreja</h2>
+                
+                <p class="mb-4">
+                    Muitos falam em reformas, mas a estrutura básica de 1632 permanece. As principais alterações foram:
+                </p>
+                <ul class="list-disc pl-6 space-y-2 mb-4">
+                    <li><strong>1900:</strong> Construção da atual torre onde ficavam os sinos.</li>
+                    <li><strong>1911:</strong> Venda de uma faixa do terreno (sacristia e corredor) à Câmara Municipal para o alargamento da antiga Rua da Boa Morte (hoje Rua do Carmo).</li>
+                    <li><strong>1924:</strong> Reconstrução do piso, parte em mármore, parte em madeira.</li>
+                    <li><strong>1958:</strong> Reforço estrutural e reconstrução da parte lateral abalada pelas obras da Secretaria da Fazenda vizinha.</li>
+                </ul>
+            </section>
+
+            <!-- CAPÍTULO VII -->
+            <section id="cap7" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO VII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Comissários da Ordem</h2>
+                
+                <p class="mb-4">
+                    "Comissário" era o antigo nome do Padre Diretor Espiritual. A lista a partir de 1856 inclui nomes como Padre Antonio de Araujo Muniz, Frei Manoel da Ascenção Franco e Cônego Vicente de Mello Cesar. Mas a história da Ordem foi marcada principalmente por três grandes eras de direção espiritual detalhadas nos capítulos seguintes.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO VIII -->
+            <section id="cap8" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO VIII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Cônego José Pascoal Christofaro</h2>
+                
+                <p class="drop-cap mb-4">
+                    Assumiu em 1969, sucedendo a Monsenhor Manfredo Leite. Nascido em 1928, ordenado em 1952, Cônego Christofaro é descrito como um espírito privilegiado, de grande projeção no clero paulista.
+                </p>
+                <p>
+                    Foi professor do Seminário, Diretor da Rádio 9 de Julho e Catedrático do Cabido Metropolitano. Sua gestão caracterizou-se pela continuidade harmônica dos ideais religiosos da Ordem e pelo carinho com os irmãos.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO IX -->
+            <section id="cap9" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO IX</div>
+                <h2 class="text-3xl font-title text-center mb-8">Monsenhor Camilo Passalacqua</h2>
+                
+                <p class="drop-cap mb-4">
+                    O "Grande Restaurador". Dirigiu a Ordem de 1892 a 1920. Nascido na Itália em 1858, veio menino para o Brasil. Foi um gigante da ação social e educacional.
+                </p>
+                <p class="mb-4">
+                    Fundou a Casa Pia de São Vicente de Paulo, o Colégio Sion, o <strong>Colégio do Carmo (1899)</strong> e o Instituto João e Raphaela Passalacqua. Reorganizou a Ordem Terceira, trazendo de volta as famílias tradicionais e o esplendor do culto. Faleceu em 1920, deixando uma obra imensa.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO X -->
+            <section id="cap10" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO X</div>
+                <h2 class="text-3xl font-title text-center mb-8">Monsenhor Manfredo Leite</h2>
+                
+                <p class="drop-cap mb-4">
+                    Sucessor imediato de Passalacqua, dirigiu a Ordem por quase 50 anos (1920-1969). Membro da Academia Paulista de Letras, era conhecido como o "Príncipe da Oratória Sacra".
+                </p>
+                <p class="mb-4">
+                    Sua palavra arrastava multidões à Igreja do Carmo. Intelectual brilhante e administrador zeloso, manteve a Ordem no auge de seu prestígio social e religioso. Faleceu em 1969, pedindo em seu testamento apenas uma laje com a inscrição: <em>"Fidem Servavi"</em> (Guardei a Fé).
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XI -->
+            <section id="cap11" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XI</div>
+                <h2 class="text-3xl font-title text-center mb-8">O Translado Histórico (1976)</h2>
+                
+                <p class="mb-4">
+                    Em 12 de junho de 1976, a Ordem prestou homenagem máxima aos seus dois grandes diretores. Os restos mortais de Mons. Passalacqua e Mons. Manfredo Leite foram transladados do Cemitério da Consolação para a <strong>Cripta da Igreja do Carmo</strong>.
+                </p>
+                <p>
+                    A cerimônia, solene e emocionante, com a presença de autoridades civis e religiosas, marcou o retorno definitivo desses pastores à "sua casa", onde agora repousam perpetuamente.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XII -->
+            <section id="cap12" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Cemitério da Ordem Terceira</h2>
+                
+                <p class="mb-4">
+                    Nos primórdios, os irmãos eram sepultados sob o assoalho da própria igreja (o piso era de madeira removível). Com as proibições sanitárias do século XIX, a Ordem obteve concessão para construir seu campo santo.
+                </p>
+                <p>
+                    Em <strong>12 de novembro de 1868</strong>, foi inaugurado o Cemitério da Ordem na Rua Sergipe (anexo ao da Consolação), com procissão solene saindo da Igreja. É um dos poucos cemitérios particulares de irmandade em São Paulo.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XIII -->
+            <section id="cap13" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XIII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Jazigo e Padre Feijó</h2>
+                
+                <p class="drop-cap mb-4">
+                    A Igreja possui uma cripta histórica. Um fato notável é que nela esteve sepultado, durante nove anos, o <strong>Padre Diogo Antônio Feijó</strong>, Regente do Império e figura central da história nacional.
+                </p>
+                <p>
+                    Feijó, que era Irmão Terceiro, faleceu em 1843 e foi sepultado no jazigo da Igreja do Carmo. Somente em 1852 foi transladado para a Ordem de São Francisco e, posteriormente, para a Catedral.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XIV -->
+            <section id="cap14" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XIV</div>
+                <h2 class="text-3xl font-title text-center mb-8">Colégio Nossa Senhora do Carmo</h2>
+                
+                <p class="drop-cap mb-4">
+                    O sonho de educar a juventude concretizou-se em <strong>1899</strong>, com a fundação do Externato (depois Colégio) Nossa Senhora do Carmo. A direção foi confiada aos Irmãos Maristas.
+                </p>
+                <p>
+                    Em 1912, a Ordem construiu um novo e majestoso edifício na Rua do Carmo. Por 72 anos, foi um dos colégios mais prestigiados de São Paulo, formando alunos ilustres como Guilherme de Almeida e Vicente Ráo. Em 1971, com a saída dos Maristas, o prédio foi cedido à PUC-SP, até ser desapropriado pelo Metrô em 1976.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XV -->
+            <section id="cap15" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XV</div>
+                <h2 class="text-3xl font-title text-center mb-8">O Estatuto</h2>
+                
+                <p class="mb-4">
+                    A organização da Ordem é secular. O arquivo guarda os Estatutos reformados em 1697! Em 1893, a Ordem foi a primeira sociedade civil inscrita no Registro de Imóveis de São Paulo (nº 1).
+                </p>
+                <p>
+                    O Estatuto define a estrutura administrativa (Mesa composta por Prior, Procurador, Tesoureiro, Secretário e Conselheiro) e a finalidade suprema: servir a Deus, à Igreja e à coletividade, sem qualquer remuneração para os diretores.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XVI -->
+            <section id="cap16" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XVI</div>
+                <h2 class="text-3xl font-title text-center mb-8">Assistência Social</h2>
+                
+                <p class="drop-cap mb-4">
+                    O lema da Ordem sempre foi: <em>"Fazer o bem da maneira mais oculta possível"</em>. A totalidade da renda é aplicada em obras.
+                </p>
+                <ul class="list-disc pl-6 space-y-2 mb-4">
+                    <li>Mantém o <strong>Ambulatório N. S. do Carmo</strong>, com atendimento médico e remédios gratuitos.</li>
+                    <li>Auxilia dezenas de pensionistas mensais.</li>
+                    <li>Contribui com instituições como o Instituto de Cegos Padre Chico.</li>
+                    <li>Cedeu espaços gratuitamente para a instalação da Faculdade de Teologia Nossa Senhora da Assunção.</li>
+                </ul>
+            </section>
+
+            <!-- CAPÍTULO XVII -->
+            <section id="cap17" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XVII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Efemérides Carmelitanas e Paulistanas</h2>
+                
+                <p class="mb-4">
+                    Este capítulo é uma rica cronologia que prova como a história do Carmo se confunde com a de São Paulo:
+                </p>
+                <ul class="space-y-4 text-sm bg-gray-50 p-6 rounded border border-gray-200">
+                    <li><strong>1594:</strong> Fundação do Convento e da Ordem Terceira.</li>
+                    <li><strong>1633:</strong> Sepultamento do bandeirante Pedro Dias Paes Leme na Igreja.</li>
+                    <li><strong>1822:</strong> Independência do Brasil (os sinos do Carmo repicaram festivamente).</li>
+                    <li><strong>1844:</strong> O Tribunal do Júri funcionou dentro da Ordem para julgar os revolucionários liberais de 1842.</li>
+                    <li><strong>1932:</strong> Revolução Constitucionalista. Centenas de irmãos alistaram-se; dois morreram em combate.</li>
+                </ul>
+            </section>
+
+            <!-- CAPÍTULO XVIII -->
+            <section id="cap18" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XVIII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Catedral, Bispos e Arcebispos</h2>
+                
+                <p class="mb-4">
+                    Até 1745, São Paulo pertencia ao Bispado do Rio. Com a criação da Diocese de São Paulo, a história da Igreja local se entrelaça com a do Carmo.
+                </p>
+                <p>
+                    O capítulo lista todos os Bispos (desde D. Bernardo Rodrigues Nogueira, 1746) e Arcebispos (a partir de D. Duarte Leopoldo e Silva, 1907), destacando figuras como o Cardeal Motta e o Cardeal Arns, que sempre tiveram relação próxima com a Ordem Terceira.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XIX -->
+            <section id="cap19" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XIX</div>
+                <h2 class="text-3xl font-title text-center mb-8">Nomes Antigos de Ruas</h2>
+                
+                <p class="mb-4">
+                    Um registro precioso da geografia urbana antiga citada no livro. Exemplos:
+                </p>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-4">
+                    <li class="bg-gray-100 p-2">Rua da Boa Morte → <strong>Rua do Carmo</strong></li>
+                    <li class="bg-gray-100 p-2">Esplanada do Carmo → <strong>Av. Rangel Pestana</strong></li>
+                    <li class="bg-gray-100 p-2">Rua da Imperatriz → <strong>Rua 15 de Novembro</strong></li>
+                    <li class="bg-gray-100 p-2">Rua da Freira → <strong>Rua Senador Feijó</strong></li>
+                </ul>
+            </section>
+
+            <!-- CAPÍTULO XX -->
+            <section id="cap20" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XX</div>
+                <h2 class="text-3xl font-title text-center mb-8">Paulo Cochrane Suplicy</h2>
+                
+                <p class="drop-cap mb-4">
+                    Homenagem a um Prior Jubilado falecido em 1977. Paulo Suplicy foi um exemplo de fidalgo cristão.
+                </p>
+                <p>
+                    Dedidou 34 anos à Mesa Administrativa. Grande benemérito, presidiu também a Fundação Casa do Pequeno Trabalhador. Sua morte foi sentida como a perda de um "coração de ouro", um homem que soube conciliar a tradição de sua família com o serviço aos humildes.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XXI -->
+            <section id="cap21" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XXI</div>
+                <h2 class="text-3xl font-title text-center mb-8">Dr. José Maria Whitaker</h2>
+                
+                <p class="drop-cap mb-4">
+                    Banqueiro, economista, Ministro da Fazenda, mas acima de tudo, um Irmão Terceiro de fé inquebrantável. Whitaker foi Prior do Carmo em diversas gestões.
+                </p>
+                <p>
+                    Considerado o "patriarca dos bancos nacionais", reformou o Banco do Brasil e as finanças nacionais. Na vida privada, era de uma humildade franciscana. O livro destaca seu perfil de homem público que nunca separou sua competência profissional de seus valores cristãos.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XXII -->
+            <section id="cap22" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XXII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Papas, Reis e Governantes</h2>
+                
+                <p class="mb-4">
+                    Uma tabela histórica que situa a longa vida da Ordem no tempo. Lista os Papas (de Clemente VIII a Paulo VI), os Reis de Portugal (da Dinastia Filipina aos Bragança), Imperadores do Brasil e Presidentes da República que governaram durante a existência da Ordem Terceira (1594-1978).
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XXIII -->
+            <section id="cap23" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XXIII</div>
+                <h2 class="text-3xl font-title text-center mb-8">Galeria de Priores</h2>
+                
+                <p class="mb-4">
+                    Relação nominal dos Priores, Prioras, Subpriores e Subprioras desde 1850. Nomes que construíram a história de São Paulo figuram aqui: Brigadeiro Antônio Simplício, Conselheiro Ramalho, Barão de Itapetininga, Baronesa de São Joaquim, Dr. Luiz Gonzaga da Silva Leme (o genealogista), entre muitos outros.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XXIV -->
+            <section id="cap24" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XXIV</div>
+                <h2 class="text-3xl font-title text-center mb-8">Mesas Administrativas (1957-1978)</h2>
+                
+                <p class="mb-4">
+                    Registro detalhado das diretorias que administraram a Ordem nas décadas recentes à publicação do livro. Documenta a continuidade administrativa e a dedicação de famílias inteiras à causa do Carmo.
+                </p>
+            </section>
+
+            <!-- CAPÍTULO XXV -->
+            <section id="cap25" class="chapter-card">
+                <div class="chapter-number">CAPÍTULO XXV</div>
+                <h2 class="text-3xl font-title text-center mb-8">O Arquivo Histórico</h2>
+                
+                <p class="drop-cap mb-4">
+                    O coração da memória da Ordem reside em seu Arquivo. Guardado em cofre de aço à prova de fogo, contém 114 volumes encadernados.
+                </p>
+                <p>
+                    O primeiro livro data de <strong>1674</strong>. Ali estão atas, termos, registros de escravos, alforrias, obras e decisões que atravessaram séculos. É uma fonte primária inestimável não só para a Igreja, mas para a história civil de São Paulo.
+                </p>
+            </section>
+
+        </main>
     </div>
 
-    <script>
-        // Função para mudar a página do PDF
-        function goToPage(pageNum, btnElement) {
-            // Nome do arquivo PDF (deve ser igual ao que você subir no GitHub)
-            const pdfName = "livro.pdf"; 
-            
-            const frame = document.getElementById('pdf-frame');
-            
-            // Atualiza o link do iframe forçando a recarga na página certa
-            // O parâmetro #page=X funciona na maioria dos leitores de PDF de navegadores
-            frame.src = `${pdfName}#page=${pageNum}&view=FitH`;
-
-            // Atualiza estilo dos botões
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
-            btnElement.classList.add('active-chapter');
-        }
-
-        // Verificação simples se o arquivo existe (opcional)
-        window.onload = function() {
-            // Marca o primeiro botão como ativo
-            const firstBtn = document.querySelector('.nav-btn');
-            if(firstBtn) firstBtn.classList.add('active-chapter');
-        };
-    </script>
 </body>
 </html>
