@@ -94,4 +94,77 @@
 
         /* Barra de rolagem personalizada */
         #sidebar::-webkit-scrollbar { width: 8px; }
-        #sidebar::-webkit-scrollbar-track { background: #fff0f0;
+        #sidebar::-webkit-scrollbar-track { background: #fff0f0; }
+        #sidebar::-webkit-scrollbar-thumb { background: #991b1b; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar" class="shadow-2xl z-20">
+        <div class="p-6 bg-red-900 sticky top-0 shadow-lg text-white border-b-4 border-red-950">
+            <h1 class="text-xl font-bold font-serif tracking-wide">CARMO</h1>
+            <h2 class="text-xs text-red-200 mt-1 uppercase">Patrimônio da História, Arte e Fé</h2>
+            <p class="text-xs mt-3 pt-2 border-t border-red-800 text-red-300 italic">Raul Leme Monteiro</p>
+        </div>
+        
+        <nav id="chapter-list">
+            <button class="nav-btn active-chapter" onclick="openBookPage(1, this)">Capa</button>
+            <button class="nav-btn" onclick="openBookPage(6, this)">Apresentação</button>
+            <button class="nav-btn" onclick="openBookPage(10, this)">Autoridades (1977)</button>
+            
+            <div class="section-header">História e Origens</div>
+            <button class="nav-btn" onclick="openBookPage(14, this)">Cap. I: Histórico da Ordem</button>
+            <button class="nav-btn" onclick="openBookPage(22, this)">Cap. II: O Escapulário</button>
+            <button class="nav-btn" onclick="openBookPage(24, this)">Cap. III: Ordens Terceiras</button>
+            
+            <div class="section-header">A Ordem em São Paulo</div>
+            <button class="nav-btn" onclick="openBookPage(25, this)">Cap. IV: Ordem 3ª do Carmo SP</button>
+            <button class="nav-btn" onclick="openBookPage(34, this)">Cap. V: A Igreja do Carmo</button>
+            <button class="nav-btn" onclick="openBookPage(45, this)">Cap. VI: Reformas da Igreja</button>
+            
+            <div class="section-header">Personalidades</div>
+            <button class="nav-btn" onclick="openBookPage(48, this)">Cap. VII: Comissários</button>
+            <button class="nav-btn" onclick="openBookPage(50, this)">Cap. VIII: Côn. José Pascoal</button>
+            <button class="nav-btn" onclick="openBookPage(52, this)">Cap. IX: Mons. Camilo Passalacqua</button>
+            <button class="nav-btn" onclick="openBookPage(63, this)">Cap. X: Mons. Manfredo Leite</button>
+            <button class="nav-btn" onclick="openBookPage(69, this)">Cap. XI: Translado Restos Mortais</button>
+            
+            <div class="section-header">Patrimônio</div>
+            <button class="nav-btn" onclick="openBookPage(74, this)">Cap. XII: Cemitério da Ordem</button>
+            <button class="nav-btn" onclick="openBookPage(78, this)">Cap. XIII: Jazigo Pe. Feijó</button>
+            <button class="nav-btn" onclick="openBookPage(80, this)">Cap. XIV: Colégio N.S. do Carmo</button>
+
+            <div class="section-header">Regras e Obras</div>
+            <button class="nav-btn" onclick="openBookPage(171, this)">Cap. XV: Estatuto</button>
+            <button class="nav-btn" onclick="openBookPage(187, this)">Cap. XVI: Assistência Social</button>
+            
+            <div class="section-header">Dados Históricos</div>
+            <button class="nav-btn" onclick="openBookPage(193, this)">Cap. XVII: Efemérides</button>
+            <button class="nav-btn" onclick="openBookPage(231, this)">Cap. XVIII: Bispos e Arcebispos</button>
+            <button class="nav-btn" onclick="openBookPage(241, this)">Cap. XIX: Ruas Antigas e Atuais</button>
+            
+            <div class="section-header">Homenagens</div>
+            <button class="nav-btn" onclick="openBookPage(245, this)">Cap. XX: Paulo Cochrane Suplicy</button>
+            <button class="nav-btn" onclick="openBookPage(251, this)">Cap. XXI: Dr. José Maria Whitaker</button>
+            <button class="nav-btn" onclick="openBookPage(259, this)">Cap. XXII: Papas e Governantes</button>
+            <button class="nav-btn" onclick="openBookPage(263, this)">Cap. XXIII: Priores desde 1850</button>
+            <button class="nav-btn" onclick="openBookPage(279, this)">Cap. XXIV: Mesas (1957-1978)</button>
+            <button class="nav-btn" onclick="openBookPage(293, this)">Cap. XXV: Arquivo da Ordem</button>
+            
+            <div class="section-header">Final</div>
+            <button class="nav-btn" onclick="openBookPage(295, this)">Conclusão e Bibliografia</button>
+        </nav>
+    </div>
+
+    <div id="pdf-container">
+        <iframe id="pdf-frame" 
+                src="carmo-001-150.pdf#page=1&view=FitH" 
+                type="application/pdf"
+                title="Leitor de PDF">
+        </iframe>
+    </div>
+
+    <script>
+        // Função inteligente que escolhe o arquivo certo
+        function openBookPage(bookPageNumber, btnElement) {
+            const iframe = document.getElementById('
