@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #7f1d1d; /* Fundo geral vermelho escuro */
+            background-color: #450a0a; /* Fundo de segurança escuro */
             height: 100vh;
             margin: 0;
             display: flex;
@@ -21,10 +21,10 @@
         @media (min-width: 1024px) {
             body { flex-direction: row; }
             #sidebar { 
-                width: 320px; 
+                width: 340px; 
                 height: 100vh; 
                 overflow-y: auto; 
-                border-right: 1px solid #450a0a;
+                border-right: 1px solid #7f1d1d;
                 background-color: #fff;
             }
             #pdf-container { flex-grow: 1; height: 100vh; background-color: #500707; }
@@ -39,4 +39,59 @@
                 border-bottom: 4px solid #7f1d1d;
                 background-color: #fff;
             }
-            #pdf-container { width: 100%; height: 6
+            #pdf-container { width: 100%; height: 65vh; flex-grow: 1; }
+        }
+
+        /* Títulos de Seção no Menu */
+        .section-header {
+            background-color: #fca5a5;
+            color: #7f1d1d;
+            font-size: 0.70rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 12px 20px;
+            border-top: 1px solid #ef4444;
+            letter-spacing: 0.05em;
+        }
+
+        /* Botões de Navegação */
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 12px 20px;
+            border: none;
+            border-bottom: 1px solid #fee2e2;
+            color: #450a0a;
+            background: white;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #fee2e2;
+            padding-left: 25px;
+            color: #b91c1c;
+            font-weight: 600;
+        }
+
+        /* Estilo do botão ativo (Capítulo selecionado) */
+        .active-chapter {
+            background-color: #7f1d1d !important;
+            color: white !important;
+            font-weight: bold;
+            border-left: 6px solid #450a0a;
+        }
+
+        /* Visualizador de PDF */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Barra de rolagem personalizada */
+        #sidebar::-webkit-scrollbar { width: 8px; }
+        #sidebar::-webkit-scrollbar-track { background: #fff0f0;
