@@ -81,6 +81,12 @@
         #sidebar::-webkit-scrollbar { width: 8px; }
         #sidebar::-webkit-scrollbar-track { background: #fee2e2; }
         #sidebar::-webkit-scrollbar-thumb { background: #991b1b; border-radius: 4px; }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -103,7 +109,7 @@
             <button class="nav-btn" onclick="openPdf('carmo-001-150.pdf', 24, this)">Cap. III: Ordens Terceiras</button>
             
             <div class="section-title">A Ordem em SP (Parte 1)</div>
-            <button class="nav-btn" onclick="openPdf('carmo-001-150.pdf', 25, this)">Cap. IV: Ordem 3ª do Carmo</button>
+            <button class="nav-btn" onclick="openPdf('carmo-001-150.pdf', 25, this)">Cap. IV: Ordem 3ª do Carmo SP</button>
             <button class="nav-btn" onclick="openPdf('carmo-001-150.pdf', 34, this)">Cap. V: A Igreja do Carmo</button>
             <button class="nav-btn" onclick="openPdf('carmo-001-150.pdf', 45, this)">Cap. VI: Reformas da Igreja</button>
             
@@ -142,32 +148,9 @@
     </div>
 
     <div id="pdf-container" class="bg-gray-200">
-        <iframe id="pdf-frame" src="carmo-001-150.pdf#page=1&view=FitH" title="Leitor de PDF"></iframe>
+        <p class="text-center mt-10 text-gray-500">Carregando o livro...</p>
     </div>
 
     <script>
         function openPdf(fileName, pageNum, btnElement) {
-            const container = document.getElementById('pdf-container');
-            
-            // Força bruta: recria o iframe. Isso garante que o navegador carregue o novo arquivo e pule para a página
-            container.innerHTML = `
-                <iframe id="pdf-frame" 
-                        src="${fileName}#page=${pageNum}&view=FitH" 
-                        title="Leitor de PDF"
-                        style="width: 100%; height: 100%; border: none;">
-                </iframe>
-            `;
-
-            // Atualiza a cor do botão selecionado
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
-            if(btnElement) btnElement.classList.add('active-chapter');
-        }
-
-        // Marca o primeiro botão como ativo ao carregar a página
-        window.onload = function() {
-            const firstBtn = document.querySelector('.nav-btn');
-            if(firstBtn) firstBtn.classList.add('active-chapter');
-        };
-    </script>
-</body>
-</html>
+            const
