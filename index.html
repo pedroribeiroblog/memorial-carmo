@@ -7,106 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f3f4f6; /* FUNDO CINZA CLARO (Correção da tela vermelha) */
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        body { font-family: 'Montserrat', sans-serif; background-color: #450a0a; height: 100vh; margin: 0; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* --- LAYOUT DESKTOP --- */
+        /* Layout */
         @media (min-width: 1024px) {
             body { flex-direction: row; }
-            #sidebar { 
-                width: 340px; 
-                height: 100vh; 
-                overflow-y: auto; 
-                border-right: 1px solid #991b1b;
-                background-color: #fff;
-            }
-            #pdf-container { flex-grow: 1; height: 100vh; position: relative; }
+            #sidebar { width: 340px; height: 100vh; overflow-y: auto; border-right: 1px solid #7f1d1d; background: #fff; }
+            #pdf-container { flex-grow: 1; height: 100vh; background-color: #500707; }
         }
-
-        /* --- LAYOUT MOBILE --- */
         @media (max-width: 1023px) {
-            #sidebar { 
-                width: 100%; 
-                height: 35vh; 
-                overflow-y: auto; 
-                border-bottom: 4px solid #991b1b;
-                background-color: #fff;
-            }
-            #pdf-container { width: 100%; height: 65vh; flex-grow: 1; position: relative; }
+            #sidebar { width: 100%; height: 35vh; overflow-y: auto; border-bottom: 4px solid #7f1d1d; background: #fff; }
+            #pdf-container { width: 100%; height: 65vh; flex-grow: 1; }
         }
 
-        /* Títulos de Seção no Menu */
-        .section-header {
-            background-color: #fca5a5;
-            color: #7f1d1d;
-            font-size: 0.70rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 12px 20px;
-            border-top: 1px solid #ef4444;
-            letter-spacing: 0.05em;
-        }
-
-        /* Botões de Navegação */
-        .nav-btn {
-            display: block;
-            width: 100%;
-            text-align: left;
-            padding: 12px 20px;
-            border: none;
-            border-bottom: 1px solid #fee2e2;
-            color: #450a0a;
-            background: white;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .nav-btn:hover {
-            background-color: #fee2e2;
-            padding-left: 25px;
-            color: #b91c1c;
-            font-weight: 600;
-        }
-
-        /* Estilo do botão ativo (Capítulo selecionado) */
-        .active-chapter {
-            background-color: #7f1d1d !important;
-            color: white !important;
-            font-weight: bold;
-            border-left: 6px solid #450a0a;
-        }
-
-        /* Visualizador de PDF */
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-            position: relative;
-            z-index: 20;
-            background-color: white;
-        }
-
-        /* Mensagem de Fundo (Aparece se o PDF falhar) */
-        .loading-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #666;
-            z-index: 10;
-        }
-
-        /* Barra de rolagem personalizada */
+        /* Estilos */
+        .section-header { background-color: #fca5a5; color: #7f1d1d; font-size: 0.70rem; font-weight: 800; text-transform: uppercase; padding: 12px 20px; border-top: 1px solid #ef4444; letter-spacing: 0.05em; }
+        .nav-btn { display: block; width: 100%; text-align: left; padding: 12px 20px; border: none; border-bottom: 1px solid #fee2e2; color: #450a0a; background: white; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+        .nav-btn:hover { background-color: #fee2e2; padding-left: 25px; color: #b91c1c; font-weight: 600; }
+        .active-chapter { background-color: #7f1d1d !important; color: white !important; font-weight: bold; border-left: 6px solid #450a0a; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
         #sidebar::-webkit-scrollbar { width: 8px; }
         #sidebar::-webkit-scrollbar-track { background: #fff0f0; }
         #sidebar::-webkit-scrollbar-thumb { background: #991b1b; border-radius: 4px; }
@@ -114,102 +33,72 @@
 </head>
 <body>
 
-    <div id="sidebar" class="shadow-2xl z-30">
+    <div id="sidebar" class="shadow-2xl z-20">
         <div class="p-6 bg-red-900 sticky top-0 shadow-lg text-white border-b-4 border-red-950">
             <h1 class="text-xl font-bold font-serif tracking-wide">CARMO</h1>
-            <h2 class="text-xs text-red-200 mt-1 uppercase">Patrimônio da História, Arte e Fé</h2>
+            <h2 class="text-xs text-red-200 mt-1 uppercase">Patrimônio da História</h2>
             <p class="text-xs mt-3 pt-2 border-t border-red-800 text-red-300 italic">Raul Leme Monteiro</p>
         </div>
         
         <nav id="chapter-list">
-            <button class="nav-btn active-chapter" onclick="openBookPage(1, this)">Capa</button>
-            <button class="nav-btn" onclick="openBookPage(6, this)">Apresentação</button>
-            <button class="nav-btn" onclick="openBookPage(10, this)">Autoridades (1977)</button>
+            <button class="nav-btn active-chapter" onclick="goToPage(1, this)">Capa e Rosto</button>
+            <button class="nav-btn" onclick="goToPage(6, this)">Apresentação</button>
+            <button class="nav-btn" onclick="goToPage(10, this)">Autoridades (1977)</button>
             
             <div class="section-header">História e Origens</div>
-            <button class="nav-btn" onclick="openBookPage(14, this)">Cap. I: Histórico da Ordem</button>
-            <button class="nav-btn" onclick="openBookPage(22, this)">Cap. II: O Escapulário</button>
-            <button class="nav-btn" onclick="openBookPage(24, this)">Cap. III: Ordens Terceiras</button>
+            <button class="nav-btn" onclick="goToPage(14, this)">Cap. I: Histórico da Ordem</button>
+            <button class="nav-btn" onclick="goToPage(22, this)">Cap. II: O Escapulário</button>
+            <button class="nav-btn" onclick="goToPage(24, this)">Cap. III: Ordens Terceiras</button>
             
             <div class="section-header">A Ordem em São Paulo</div>
-            <button class="nav-btn" onclick="openBookPage(25, this)">Cap. IV: Ordem 3ª do Carmo SP</button>
-            <button class="nav-btn" onclick="openBookPage(34, this)">Cap. V: A Igreja do Carmo</button>
-            <button class="nav-btn" onclick="openBookPage(45, this)">Cap. VI: Reformas da Igreja</button>
+            <button class="nav-btn" onclick="goToPage(25, this)">Cap. IV: Ordem 3ª do Carmo SP</button>
+            <button class="nav-btn" onclick="goToPage(34, this)">Cap. V: A Igreja do Carmo</button>
+            <button class="nav-btn" onclick="goToPage(45, this)">Cap. VI: Reformas da Igreja</button>
             
             <div class="section-header">Personalidades</div>
-            <button class="nav-btn" onclick="openBookPage(48, this)">Cap. VII: Comissários</button>
-            <button class="nav-btn" onclick="openBookPage(50, this)">Cap. VIII: Côn. José Pascoal</button>
-            <button class="nav-btn" onclick="openBookPage(52, this)">Cap. IX: Mons. Camilo Passalacqua</button>
-            <button class="nav-btn" onclick="openBookPage(63, this)">Cap. X: Mons. Manfredo Leite</button>
-            <button class="nav-btn" onclick="openBookPage(69, this)">Cap. XI: Translado Restos Mortais</button>
+            <button class="nav-btn" onclick="goToPage(48, this)">Cap. VII: Comissários</button>
+            <button class="nav-btn" onclick="goToPage(50, this)">Cap. VIII: Côn. José Pascoal</button>
+            <button class="nav-btn" onclick="goToPage(52, this)">Cap. IX: Mons. Camilo Passalacqua</button>
+            <button class="nav-btn" onclick="goToPage(63, this)">Cap. X: Mons. Manfredo Leite</button>
+            <button class="nav-btn" onclick="goToPage(69, this)">Cap. XI: Translado Restos Mortais</button>
             
             <div class="section-header">Patrimônio</div>
-            <button class="nav-btn" onclick="openBookPage(74, this)">Cap. XII: Cemitério da Ordem</button>
-            <button class="nav-btn" onclick="openBookPage(78, this)">Cap. XIII: Jazigo Pe. Feijó</button>
-            <button class="nav-btn" onclick="openBookPage(80, this)">Cap. XIV: Colégio N.S. do Carmo</button>
-
+            <button class="nav-btn" onclick="goToPage(74, this)">Cap. XII: Cemitério da Ordem</button>
+            <button class="nav-btn" onclick="goToPage(78, this)">Cap. XIII: Jazigo Pe. Feijó</button>
+            <button class="nav-btn" onclick="goToPage(80, this)">Cap. XIV: Colégio N.S. do Carmo</button>
+            
             <div class="section-header">Regras e Obras</div>
-            <button class="nav-btn" onclick="openBookPage(171, this)">Cap. XV: Estatuto</button>
-            <button class="nav-btn" onclick="openBookPage(187, this)">Cap. XVI: Assistência Social</button>
+            <button class="nav-btn" onclick="goToPage(171, this)">Cap. XV: Estatuto</button>
+            <button class="nav-btn" onclick="goToPage(187, this)">Cap. XVI: Assistência Social</button>
             
             <div class="section-header">Dados Históricos</div>
-            <button class="nav-btn" onclick="openBookPage(193, this)">Cap. XVII: Efemérides</button>
-            <button class="nav-btn" onclick="openBookPage(231, this)">Cap. XVIII: Bispos e Arcebispos</button>
-            <button class="nav-btn" onclick="openBookPage(241, this)">Cap. XIX: Ruas Antigas e Atuais</button>
+            <button class="nav-btn" onclick="goToPage(193, this)">Cap. XVII: Efemérides</button>
+            <button class="nav-btn" onclick="goToPage(231, this)">Cap. XVIII: Bispos e Arcebispos</button>
+            <button class="nav-btn" onclick="goToPage(241, this)">Cap. XIX: Ruas Antigas e Atuais</button>
             
             <div class="section-header">Homenagens</div>
-            <button class="nav-btn" onclick="openBookPage(245, this)">Cap. XX: Paulo Cochrane Suplicy</button>
-            <button class="nav-btn" onclick="openBookPage(251, this)">Cap. XXI: Dr. José Maria Whitaker</button>
-            <button class="nav-btn" onclick="openBookPage(259, this)">Cap. XXII: Papas e Governantes</button>
-            <button class="nav-btn" onclick="openBookPage(263, this)">Cap. XXIII: Priores desde 1850</button>
-            <button class="nav-btn" onclick="openBookPage(279, this)">Cap. XXIV: Mesas (1957-1978)</button>
-            <button class="nav-btn" onclick="openBookPage(293, this)">Cap. XXV: Arquivo da Ordem</button>
+            <button class="nav-btn" onclick="goToPage(245, this)">Cap. XX: Paulo Cochrane Suplicy</button>
+            <button class="nav-btn" onclick="goToPage(251, this)">Cap. XXI: Dr. José Maria Whitaker</button>
+            <button class="nav-btn" onclick="goToPage(259, this)">Cap. XXII: Papas e Governantes</button>
+            <button class="nav-btn" onclick="goToPage(263, this)">Cap. XXIII: Priores desde 1850</button>
+            <button class="nav-btn" onclick="goToPage(279, this)">Cap. XXIV: Mesas (1957-1978)</button>
+            <button class="nav-btn" onclick="goToPage(293, this)">Cap. XXV: Arquivo da Ordem</button>
             
             <div class="section-header">Final</div>
-            <button class="nav-btn" onclick="openBookPage(295, this)">Conclusão e Bibliografia</button>
+            <button class="nav-btn" onclick="goToPage(295, this)">Conclusão e Bibliografia</button>
         </nav>
     </div>
 
     <div id="pdf-container">
-        <div class="loading-message">
-            <h3 class="text-xl font-bold mb-2">Carregando Livro...</h3>
-            <p class="text-sm">Se esta tela persistir, verifique se os arquivos<br>
-            <strong>carmo-001-150.pdf</strong> e <strong>carmo-151-305.pdf</strong><br>
-            estão na mesma pasta (GitHub).</p>
-        </div>
-
-        <iframe id="pdf-frame" 
-                src="carmo-001-150.pdf#page=1&view=FitH" 
-                type="application/pdf"
-                title="Leitor de PDF">
-        </iframe>
+        <iframe id="pdf-frame" src="carmo.pdf#page=1&view=FitH" title="Leitor de PDF"></iframe>
     </div>
 
     <script>
-        // Função inteligente que escolhe o arquivo certo
-        function openBookPage(bookPageNumber, btnElement) {
-            const iframe = document.getElementById('pdf-frame');
-            let filename = "";
-            let pdfPage = 1;
-
-            // Se a página do livro for menor ou igual a 150, usa o Arquivo 1
-            if (bookPageNumber <= 150) {
-                filename = "carmo-001-150.pdf";
-                pdfPage = bookPageNumber;
-            } 
-            // Se for maior que 150, usa o Arquivo 2 e subtrai 150 para achar a página correta
-            else {
-                filename = "carmo-151-305.pdf";
-                pdfPage = bookPageNumber - 150;
-            }
-
-            // Monta o caminho final
-            const fullPath = filename + "#page=" + pdfPage + "&view=FitH";
+        function goToPage(pageNum, btnElement) {
+            const container = document.getElementById('pdf-container');
+            // Recria o iframe para forçar o salto de página
+            container.innerHTML = `<iframe id="pdf-frame" src="carmo.pdf#page=${pageNum}&view=FitH" title="Leitor de PDF"></iframe>`;
             
-            // Carrega no visualizador
-            iframe.src = fullPath;
-
-            // Atualiza a cor do botão clicado no menu
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
             if(btnElement) btnElement.classList.add('active-chapter');
         }
