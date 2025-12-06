@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #450a0a; /* Fundo de segurança escuro */
+            background-color: #f3f4f6; /* FUNDO CINZA CLARO (Correção da tela vermelha) */
             height: 100vh;
             margin: 0;
             display: flex;
@@ -24,10 +24,10 @@
                 width: 340px; 
                 height: 100vh; 
                 overflow-y: auto; 
-                border-right: 1px solid #7f1d1d;
+                border-right: 1px solid #991b1b;
                 background-color: #fff;
             }
-            #pdf-container { flex-grow: 1; height: 100vh; background-color: #500707; }
+            #pdf-container { flex-grow: 1; height: 100vh; position: relative; }
         }
 
         /* --- LAYOUT MOBILE --- */
@@ -36,10 +36,10 @@
                 width: 100%; 
                 height: 35vh; 
                 overflow-y: auto; 
-                border-bottom: 4px solid #7f1d1d;
+                border-bottom: 4px solid #991b1b;
                 background-color: #fff;
             }
-            #pdf-container { width: 100%; height: 65vh; flex-grow: 1; }
+            #pdf-container { width: 100%; height: 65vh; flex-grow: 1; position: relative; }
         }
 
         /* Títulos de Seção no Menu */
@@ -90,6 +90,20 @@
             height: 100%;
             border: none;
             display: block;
+            position: relative;
+            z-index: 20;
+            background-color: white;
+        }
+
+        /* Mensagem de Fundo (Aparece se o PDF falhar) */
+        .loading-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #666;
+            z-index: 10;
         }
 
         /* Barra de rolagem personalizada */
@@ -100,7 +114,7 @@
 </head>
 <body>
 
-    <div id="sidebar" class="shadow-2xl z-20">
+    <div id="sidebar" class="shadow-2xl z-30">
         <div class="p-6 bg-red-900 sticky top-0 shadow-lg text-white border-b-4 border-red-950">
             <h1 class="text-xl font-bold font-serif tracking-wide">CARMO</h1>
             <h2 class="text-xs text-red-200 mt-1 uppercase">Patrimônio da História, Arte e Fé</h2>
@@ -157,6 +171,13 @@
     </div>
 
     <div id="pdf-container">
+        <div class="loading-message">
+            <h3 class="text-xl font-bold mb-2">Carregando Livro...</h3>
+            <p class="text-sm">Se esta tela persistir, verifique se os arquivos<br>
+            <strong>carmo-001-150.pdf</strong> e <strong>carmo-151-305.pdf</strong><br>
+            estão na mesma pasta (GitHub).</p>
+        </div>
+
         <iframe id="pdf-frame" 
                 src="carmo-001-150.pdf#page=1&view=FitH" 
                 type="application/pdf"
@@ -167,4 +188,31 @@
     <script>
         // Função inteligente que escolhe o arquivo certo
         function openBookPage(bookPageNumber, btnElement) {
-            const iframe = document.getElementById('
+            const iframe = document.getElementById('pdf-frame');
+            let filename = "";
+            let pdfPage = 1;
+
+            // Se a página do livro for menor ou igual a 150, usa o Arquivo 1
+            if (bookPageNumber <= 150) {
+                filename = "carmo-001-150.pdf";
+                pdfPage = bookPageNumber;
+            } 
+            // Se for maior que 150, usa o Arquivo 2 e subtrai 150 para achar a página correta
+            else {
+                filename = "carmo-151-305.pdf";
+                pdfPage = bookPageNumber - 150;
+            }
+
+            // Monta o caminho final
+            const fullPath = filename + "#page=" + pdfPage + "&view=FitH";
+            
+            // Carrega no visualizador
+            iframe.src = fullPath;
+
+            // Atualiza a cor do botão clicado no menu
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
+            if(btnElement) btnElement.classList.add('active-chapter');
+        }
+    </script>
+</body>
+</html>
