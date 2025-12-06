@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #fdf2f2; /* Fundo levemente rosado */
+            background-color: #fdf2f2;
             height: 100vh;
             margin: 0;
             display: flex;
@@ -17,36 +17,168 @@
             overflow: hidden;
         }
         
-        /* Layout Desktop: Menu Esquerdo, PDF Direito */
+        /* --- LAYOUT DESKTOP --- */
         @media (min-width: 1024px) {
             body { flex-direction: row; }
-            #sidebar { width: 380px; height: 100vh; overflow-y: auto; border-right: 1px solid #991b1b; }
-            #pdf-container { flex-grow: 1; height: 100vh; }
+            /* Sidebar com largura fixa para não sumir */
+            #sidebar { 
+                flex: 0 0 350px; /* Largura fixa de 350px */
+                height: 100vh; 
+                overflow-y: auto; 
+                border-right: 4px solid #7f1d1d; 
+            }
+            #pdf-container { flex: 1; height: 100vh; position: relative; }
         }
 
-        /* Layout Mobile */
+        /* --- LAYOUT MOBILE --- */
         @media (max-width: 1023px) {
             #sidebar { 
                 width: 100%; 
-                height: auto; 
-                max-height: 40vh; 
+                height: 40vh; /* Menu ocupa 40% da tela */
                 overflow-y: auto; 
-                border-bottom: 2px solid #991b1b;
+                border-bottom: 4px solid #7f1d1d;
             }
-            #pdf-container { width: 100%; height: 60vh; flex-grow: 1; }
+            #pdf-container { width: 100%; height: 60vh; flex: 1; }
         }
 
-        /* Cabeçalho do Menu */
-        .sidebar-header {
-            background-color: #7f1d1d; /* Vermelho Bordô Escuro */
-            color: white;
-            padding: 1.5rem;
-            border-bottom: 4px solid #450a0a;
-        }
-
-        /* Botões do Menu */
+        /* Estilos do Menu */
         .nav-btn {
             display: block;
             width: 100%;
             text-align: left;
-            padding: 12px
+            padding: 12px 20px;
+            border: none;
+            border-bottom: 1px solid #fee2e2;
+            color: #450a0a;
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #fca5a5;
+            padding-left: 25px;
+            color: #7f1d1d;
+            font-weight: bold;
+        }
+
+        .active-chapter {
+            background-color: #991b1b !important;
+            color: white !important;
+            font-weight: bold;
+            border-left: 8px solid #450a0a;
+        }
+        
+        .section-title {
+            background-color: #fecaca;
+            color: #7f1d1d;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            padding: 12px 15px;
+            border-top: 1px solid #ef4444;
+        }
+
+        /* Iframe do PDF */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Scrollbar */
+        #sidebar::-webkit-scrollbar { width: 10px; }
+        #sidebar::-webkit-scrollbar-track { background: #fee2e2; }
+        #sidebar::-webkit-scrollbar-thumb { background: #b91c1c; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar" class="bg-white shadow-2xl z-20">
+        <div class="p-6 bg-red-900 sticky top-0 shadow-lg border-b-4 border-red-950 text-white">
+            <h1 class="text-2xl font-bold font-serif">CARMO</h1>
+            <h2 class="text-sm text-red-200 uppercase mt-1">Patrimônio da História</h2>
+            <div class="mt-4 text-xs flex gap-2">
+                <a href="./carmo-001-150.pdf" target="_blank" class="bg-red-700 px-2 py-1 rounded hover:bg-red-600">Baixar Parte 1</a>
+                <a href="./carmo-151-305.pdf" target="_blank" class="bg-red-700 px-2 py-1 rounded hover:bg-red-600">Baixar Parte 2</a>
+            </div>
+        </div>
+        
+        <nav id="chapter-list">
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 1, this)">Capa e Rosto</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 6, this)">Apresentação e Nota</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 10, this)">Autoridades (1977)</button>
+            
+            <div class="section-title">História e Origens (Parte 1)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 14, this)">Cap. I: Histórico da Ordem</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 22, this)">Cap. II: O Escapulário</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 24, this)">Cap. III: Ordens Terceiras</button>
+            
+            <div class="section-title">A Ordem em SP (Parte 1)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 25, this)">Cap. IV: Ordem 3ª do Carmo SP</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 34, this)">Cap. V: A Igreja do Carmo</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 45, this)">Cap. VI: Reformas da Igreja</button>
+            
+            <div class="section-title">Personalidades (Parte 1)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 48, this)">Cap. VII: Comissários</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 50, this)">Cap. VIII: Côn. José Pascoal</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 52, this)">Cap. IX: Mons. Camilo Passalacqua</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 63, this)">Cap. X: Mons. Manfredo Leite</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 69, this)">Cap. XI: Translado Restos Mortais</button>
+            
+            <div class="section-title">Patrimônio (Parte 1)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 74, this)">Cap. XII: Cemitério da Ordem</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 78, this)">Cap. XIII: Jazigo Pe. Feijó</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-001-150.pdf', 80, this)">Cap. XIV: Colégio N.S. do Carmo</button>
+
+            <div class="section-title">Obras e Estatuto (Parte 2)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 21, this)">Cap. XV: Estatuto</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 37, this)">Cap. XVI: Assistência Social</button>
+            
+            <div class="section-title">Dados Históricos (Parte 2)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 43, this)">Cap. XVII: Efemérides</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 81, this)">Cap. XVIII: Bispos e Arcebispos</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 91, this)">Cap. XIX: Ruas Antigas e Atuais</button>
+            
+            <div class="section-title">Homenagens (Parte 2)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 95, this)">Cap. XX: Paulo Cochrane Suplicy</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 101, this)">Cap. XXI: Dr. José Maria Whitaker</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 109, this)">Cap. XXII: Papas e Governantes</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 113, this)">Cap. XXIII: Priores desde 1850</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 129, this)">Cap. XXIV: Mesas (1957-1978)</button>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 143, this)">Cap. XXV: Arquivo da Ordem</button>
+            
+            <div class="section-title">Final (Parte 2)</div>
+            <button class="nav-btn" onclick="loadPdf('carmo-151-305.pdf', 145, this)">Conclusão e Bibliografia</button>
+        </nav>
+    </div>
+
+    <div id="pdf-container" class="bg-gray-200 flex items-center justify-center relative">
+        <p id="loading-text" class="text-gray-500 absolute z-0 text-center px-4">
+            Selecione um capítulo ao lado.<br>
+            <span class="text-xs">Se o PDF não abrir, use os botões de baixar no menu.</span>
+        </p>
+        <iframe id="pdf-frame" class="relative z-10 w-full h-full bg-white"></iframe>
+    </div>
+
+    <script>
+        function loadPdf(fileName, pageNum, btnElement) {
+            const iframe = document.getElementById('pdf-frame');
+            
+            // Caminho relativo simples para o GitHub Pages
+            const path = "./" + fileName + "#page=" + pageNum + "&view=FitH";
+            
+            // Log para debug (aperte F12 no navegador para ver se o caminho está certo)
+            console.log("Tentando abrir: " + path);
+
+            // Atualiza o iframe
+            iframe.src = path;
+
+            // Atualiza visualmente o menu
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
+            if(btnElement) btnElement.classList.add('active-chapter');
+        }
+
+        // Car
