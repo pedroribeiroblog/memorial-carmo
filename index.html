@@ -96,7 +96,6 @@
     <script>
         function goToPage(pageNum, btnElement) {
             const container = document.getElementById('pdf-container');
-            // Recria o iframe para forçar o navegador a pular para a página
             container.innerHTML = `<iframe id="pdf-frame" src="carmo.pdf#page=${pageNum}&view=FitH" title="Leitor de PDF"></iframe>`;
             
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
