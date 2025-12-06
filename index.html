@@ -42,17 +42,17 @@
         
         <nav id="chapter-list">
             <button class="nav-btn active-chapter" onclick="goToPage(1, this)">Capa e Rosto</button>
-            <button class="nav-btn" onclick="goToPage(10, this)">Apresentação</button>
-            <button class="nav-btn" onclick="goToPage(18, this)">Autoridades (1977)</button>
+            <button class="nav-btn" onclick="goToPage(10, this)">Apresentação (D. Ernesto)</button>
             <button class="nav-btn" onclick="goToPage(14, this)">Nota do Autor</button>
+            <button class="nav-btn" onclick="goToPage(18, this)">Autoridades (1977)</button>
             
             <div class="section-header">História e Origens</div>
             <button class="nav-btn" onclick="goToPage(22, this)">Cap. I: Histórico da Ordem</button>
             <button class="nav-btn" onclick="goToPage(42, this)">Cap. II: O Escapulário</button>
-            <button class="nav-btn" onclick="goToPage(46, this)">Cap. III: Ordens Terceiras</button>
+            <button class="nav-btn" onclick="goToPage(45, this)">Cap. III: Ordens Terceiras</button>
             
             <div class="section-header">A Ordem em São Paulo</div>
-            <button class="nav-btn" onclick="goToPage(48, this)">Cap. IV: Ordem 3ª do Carmo SP</button>
+            <button class="nav-btn" onclick="goToPage(47, this)">Cap. IV: Ordem 3ª do Carmo SP</button>
             <button class="nav-btn" onclick="goToPage(66, this)">Cap. V: A Igreja do Carmo</button>
             <button class="nav-btn" onclick="goToPage(88, this)">Cap. VI: Reformas da Igreja</button>
             
@@ -97,7 +97,7 @@
     <script>
         function goToPage(pageNum, btnElement) {
             const container = document.getElementById('pdf-container');
-            // Recria o iframe para forçar o navegador a pular para a página
+            // Recria o iframe para forçar o salto de página
             container.innerHTML = `<iframe id="pdf-frame" src="carmo.pdf#page=${pageNum}&view=FitH" title="Leitor de PDF"></iframe>`;
             
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-chapter'));
